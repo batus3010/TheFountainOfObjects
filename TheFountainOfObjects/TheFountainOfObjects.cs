@@ -52,6 +52,8 @@ namespace TheFountainOfObjects
                 _map.SetRoomType(new Coordinate(0, 2), RoomType.Fountain);
                 player = new Player(new Coordinate(0, 0));
             }
+            // add pit room to the game
+            _map.SetRoomType(new Coordinate(1, 2), RoomType.Pit);
         }
 
         private void InitializeMessages()
@@ -60,6 +62,8 @@ namespace TheFountainOfObjects
             messages["fountainFound"] = "You hear water dripping in this room. The Fountain of Objects is here!";
             messages["fountainFound_Active"] = "You hear the rushing waters from the Fountain of Objects. It has been reactivated!";
             messages["win"] = "The Fountain of Objects has been reactivated, and you have escaped with your life!\nYou win!";
+            messages["pitSense"] = "You feel a draft. There is a pit in a nearby room";
+            messages["pitDeath"] = "You have fallen into a pit and died. Game over!";
             messages["invalid"] = "Invalid input. Please try again.";
         }
 
@@ -84,13 +88,18 @@ namespace TheFountainOfObjects
                     Console.WriteLine($"Total time spent: {Math.Round((DateTime.Now - beginTime).TotalSeconds, 2)} seconds.");
                     break;
                 }
+                else if (_map.GetRoomType(player.Location) == RoomType.Pit)
+                {
+                    Console.WriteLine(messages["pitDeath"]);
+                    break;
+                }
             }
         }
 
         public void DisplayStatus()
         {
             // display the current location of the player
-            Console.WriteLine($"You are in room (Row={player.Location.Row}, Column={player.Location.Column}).");
+            Console.WriteLine($"\nYou are in room (Row={player.Location.Row}, Column={player.Location.Column}).");
             // check if the player is in the room with the fountain
             if (_map.GetRoomType(player.Location) == RoomType.Fountain)
             {
@@ -107,6 +116,24 @@ namespace TheFountainOfObjects
             {
                 Console.WriteLine(messages["entrance"]);
             }
+            // Players can sense the draft blowing out of pits in adjacent rooms (all eight directions)
+            if (player.Location.Row > 0 && _map.GetRoomType(new Coordinate(player.Location.Row - 1, player.Location.Column)) == RoomType.Pit)
+            {
+                Console.WriteLine(messages["pitSense"]);
+            }
+            if (player.Location.Row < _size && _map.GetRoomType(new Coordinate(player.Location.Row + 1, player.Location.Column)) == RoomType.Pit)
+            {
+                Console.WriteLine(messages["pitSense"]);
+            }
+            if (player.Location.Column > 0 && _map.GetRoomType(new Coordinate(player.Location.Row, player.Location.Column - 1)) == RoomType.Pit)
+            {
+                Console.WriteLine(messages["pitSense"]);
+            }
+            if (player.Location.Column < _size && _map.GetRoomType(new Coordinate(player.Location.Row, player.Location.Column + 1)) == RoomType.Pit)
+            {
+                Console.WriteLine(messages["pitSense"]);
+            }
+
         }
 
         static private Action GetPlayerAction()
@@ -195,6 +222,6 @@ namespace TheFountainOfObjects
     public enum RoomType { Normal, Entrance,Fountain, Pit }
 
     public enum Action { MoveNorth, MoveSouth, MoveEast, MoveWest , ActivateFountain }
-    public enum RoomSize { Small = 4, Medium = 6, Large = 8 }
+    public enum WorldSize { Small = 4, Medium = 6, Large = 8 }
 
 }
