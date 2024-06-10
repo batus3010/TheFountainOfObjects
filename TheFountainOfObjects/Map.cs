@@ -27,7 +27,12 @@ namespace TheFountainOfObjects
                 }
             }
         }
-
+        // method to check if the room is on the map
+        public bool IsRoomOnMap(Coordinate room)
+        {
+            return room.Row >= 0 && room.Row < _roomTypes.GetLength(0) &&
+                   room.Column >= 0 && room.Column < _roomTypes.GetLength(1); 
+        }
         public RoomType GetRoomType(Coordinate coordinate)
         {
             return _roomTypes[coordinate.Row, coordinate.Column];
