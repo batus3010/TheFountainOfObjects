@@ -116,23 +116,23 @@ namespace TheFountainOfObjects
             {
                 Console.WriteLine(messages["entrance"]);
             }
-            // Players can sense the draft blowing out of pits in adjacent rooms (all eight directions)
-            if (player.Location.Row > 0 && _map.GetRoomType(new Coordinate(player.Location.Row - 1, player.Location.Column)) == RoomType.Pit)
-            {
-                Console.WriteLine(messages["pitSense"]);
-            }
-            if (player.Location.Row < _size && _map.GetRoomType(new Coordinate(player.Location.Row + 1, player.Location.Column)) == RoomType.Pit)
-            {
-                Console.WriteLine(messages["pitSense"]);
-            }
-            if (player.Location.Column > 0 && _map.GetRoomType(new Coordinate(player.Location.Row, player.Location.Column - 1)) == RoomType.Pit)
-            {
-                Console.WriteLine(messages["pitSense"]);
-            }
-            if (player.Location.Column < _size && _map.GetRoomType(new Coordinate(player.Location.Row, player.Location.Column + 1)) == RoomType.Pit)
-            {
-                Console.WriteLine(messages["pitSense"]);
-            }
+            //// Players can sense the draft blowing out of pits in adjacent rooms (all eight directions)
+            //if (player.Location.Row > 0 && _map.GetRoomType(new Coordinate(player.Location.Row - 1, player.Location.Column)) == RoomType.Pit)
+            //{
+            //    Console.WriteLine(messages["pitSense"]);
+            //}
+            //if (player.Location.Row < _size && _map.GetRoomType(new Coordinate(player.Location.Row + 1, player.Location.Column)) == RoomType.Pit)
+            //{
+            //    Console.WriteLine(messages["pitSense"]);
+            //}
+            //if (player.Location.Column > 0 && _map.GetRoomType(new Coordinate(player.Location.Row, player.Location.Column - 1)) == RoomType.Pit)
+            //{
+            //    Console.WriteLine(messages["pitSense"]);
+            //}
+            //if (player.Location.Column < _size && _map.GetRoomType(new Coordinate(player.Location.Row, player.Location.Column + 1)) == RoomType.Pit)
+            //{
+            //    Console.WriteLine(messages["pitSense"]);
+            //}
 
         }
 
@@ -174,7 +174,7 @@ namespace TheFountainOfObjects
                     }
                     break;
                 case Action.MoveSouth:
-                    if (player.Location.Row < _size)
+                    if (player.Location.Row < _size - 1)
                     {
                         player.Location = new Coordinate(player.Location.Row + 1, player.Location.Column);
                     }
@@ -184,7 +184,7 @@ namespace TheFountainOfObjects
                     }
                     break;
                 case Action.MoveEast:
-                    if (player.Location.Column < _size)
+                    if (player.Location.Column < _size - 1)
                     {
                         player.Location = new Coordinate(player.Location.Row, player.Location.Column + 1);
                     }
