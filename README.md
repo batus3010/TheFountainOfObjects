@@ -26,6 +26,7 @@
    - **Empty Rooms**: Nothing to sense.
    - **Entrance** (Row=0, Column=0): The starting point. The player senses light from outside.
    - **Fountain Room** (Row=0, Column=2): Contains the Fountain of Objects, which can be enabled or disabled.
+   - **Pit Room** (Row=1, Column=2): Player will fall if they walk into this room and lost the game, but they can sense if they are near one.
 
 4. **Player Actions**:
    - Movement: `move north`, `move south`, `move east`, `move west`. The player can't move outside the map boundaries.
