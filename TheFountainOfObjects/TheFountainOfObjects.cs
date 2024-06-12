@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TheFountainOfObjects
 {
@@ -10,7 +13,6 @@ namespace TheFountainOfObjects
     {
 
         private Dictionary<string, string> messages = new();
-        private readonly RoomType[,] Map = new RoomType[4, 4];
         private readonly int _size;
         private readonly Player player;
         private readonly Map _map;
@@ -18,7 +20,7 @@ namespace TheFountainOfObjects
         private bool isFountainActive = false;
 
         // define 3 methods for small, medium, and large worlds, and Pick an appropriate location for the Fountain Room
-        public TheFountainOfObjects(int size)
+        public TheFountainOfObjects(int size = 4)
         {
             InitializeMessages();
 
@@ -54,6 +56,8 @@ namespace TheFountainOfObjects
             }
             // add pit room to the game
             _map.SetRoomType(new Coordinate(1, 2), RoomType.Pit);
+            _map.SetRoomType(new Coordinate(2, 3), RoomType.Maelstorm);
+
         }
 
         private void InitializeMessages()
@@ -64,6 +68,7 @@ namespace TheFountainOfObjects
             messages["win"] = "The Fountain of Objects has been reactivated, and you have escaped with your life!\nYou win!";
             messages["pitSense"] = "You feel a draft. There is a pit in a nearby room";
             messages["pitDeath"] = "You have fallen into a pit and died. Game over!";
+            messages["maelStormSense"] = "You hear the growling and groaning of a maelstrom nearby";
             messages["invalid"] = "Invalid input. Please try again.";
         }
 
@@ -93,6 +98,17 @@ namespace TheFountainOfObjects
                     Console.WriteLine(messages["pitDeath"]);
                     break;
                 }
+                // if player get into the Maelstorm room, they move one space north and two spaces west, make sure to clamp them on the map
+                else if (_map.GetRoomType(player.Location) == RoomType.Maelstorm)
+                {
+                    Coordinate newPlayerLocation = new Coordinate(player.Location.Row - 1, player.Location.Column - 2);
+                    // when player is moved, tell them so
+                    Console.WriteLine("You have been sucked into the Maelstorm and moved one space north and two spaces west.");
+                    // clamp the player location to the map
+                    player.Location = new Coordinate(Math.Max(0, newPlayerLocation.Row), Math.Max(0, newPlayerLocation.Column));
+
+                }
+
             }
         }
 
@@ -117,11 +133,20 @@ namespace TheFountainOfObjects
                 Console.WriteLine(messages["entrance"]);
             }
 
+            //if (player.SensePitRoom(_map))
+            //{
+            //    Console.WriteLine(messages["pitSense"]);
+            //}
+
+            // sensing for pit and maelstorm
             if (player.SensePitRoom(_map))
             {
                 Console.WriteLine(messages["pitSense"]);
             }
-
+            if (player.SenseMaelstormRoom(_map))
+            {
+                Console.WriteLine(messages["maelStormSense"]);
+            }
 
         }
 
@@ -207,10 +232,12 @@ namespace TheFountainOfObjects
         }
 
     }
-
-    public enum RoomType { Normal, Entrance,Fountain, Pit }
+        
+    public enum RoomType { Normal, Entrance,Fountain, Pit, Maelstorm }
 
     public enum Action { MoveNorth, MoveSouth, MoveEast, MoveWest , ActivateFountain }
     public enum WorldSize { Small = 4, Medium = 6, Large = 8 }
+
+
 
 }
